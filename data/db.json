@@ -1,0 +1,14 @@
+{
+  "ids": {
+    "User": 6
+  },
+  "models": {
+    "User": {
+      "1": "{\"username\":\"nhuquan\",\"password\":\"123123\",\"fullName\":\"Tcheng Nhu Quan\",\"age\":\"20\",\"gender\":\"female\",\"email\":\"nhuquan@gmail.com\",\"phoneNumber\":\"123123\",\"createdAt\":\"Date\",\"updatedAt\":\"Date\",\"id\":1}",
+      "2": "{\"username\":\"quynhnhu\",\"password\":\"123124\",\"fullName\":\"Phan Quynh Nhu\",\"age\":\"20\",\"gender\":\"female\",\"email\":\"quynhnhu@gmail.com\",\"phoneNumber\":\"123124\",\"createdAt\":\"Date\",\"updatedAt\":\"Date\",\"id\":2}",
+      "3": "{\"username\":\"songtri\",\"password\":\"123125\",\"fullName\":\"Nguyen Song Tri\",\"age\":\"20\",\"gender\":\"female\",\"email\":\"songtri@gmail.com\",\"phoneNumber\":\"123125\",\"createdAt\":\"Date\",\"updatedAt\":\"Date\",\"id\":3}",
+      "4": "{\"username\":\"songtue\",\"password\":\"123126\",\"fullName\":\"Nguyen Song Tue\",\"age\":\"20\",\"gender\":\"female\",\"email\":\"songtue@gmail.com\",\"phoneNumber\":\"123126\",\"createdAt\":\"Date\",\"updatedAt\":\"Date\",\"id\":4}",
+      "5": "{\"username\":\"quan\",\"password\":\"nhuquan\",\"fullName\":\"Như QUân\",\"age\":0,\"gender\":\"string\",\"email\":\"string\",\"isDeleted\":false,\"isActive\":true,\"createdAt\":\"2022-08-04T07:49:06.016Z\",\"updatedAt\":\"2022-08-04T07:49:06.016Z\",\"id\":5}"
+    }
+  }
+}
