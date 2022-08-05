@@ -1,0 +1,77 @@
+
+@startuml todolist_uml
+
+' hide the spot
+hide circle
+
+' avoid problems with angled crows feet
+skinparam linetype ortho
+
+    entity "User" as  user{
+        -id: ObjectID <<generated>>
+        --
+        username: string
+        password: string
+        fullName: string
+        age: number
+        gender: string
+        email: string
+        phoneNumber: string
+        isDeleted: boolean
+        isActive: boolean
+        createdAt?: Date
+        updatedAt?: Date
+    }
+
+    entity "Project" as project {
+        -id: ObjectID <<generated>>
+        --
+        projectName: string
+        description: string
+        status: string <<ongoing | not start yet | done>>
+        isDeleted: boolean
+        createdAt?: Date
+        updatedAt?: Date
+    }
+
+    entity "Task" as task {
+        -id: ObjectID <<generated>>
+        --
+        ~createdBy: ObjectID
+        ~assignedTo: ObjectID
+        ~projectId: ObjectID
+        ~linkedTaskId: ObjectID
+        --
+        taskName: string
+        description: string
+        isDeleted: boolean
+        status: string <<ongoing | not start yet | done>>
+        createdAt?: Date
+        updatedAt?: Date
+
+    }
+
+    entity "ProjectUser" as projectUser {
+        -id: ObjectID <<generated>>
+        --
+        ~projectId: ObjectID
+        ~userId: ObjectID
+        --
+        createdAt?: Date
+        updatedAt?: Date
+        role: RoleEnum <<admin | user>>
+        '   RoleEnum {
+        '   ADMIN = 'admin',
+        '   USER = 'user',
+        ' }
+    }
+
+    user ||--o{ projectUser
+    user ||--o{ task
+
+    project ||--|{ projectUser
+    project ||--|{ task
+
+    task ||--|| task
+
+@enduml
