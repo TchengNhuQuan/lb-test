@@ -11,6 +11,35 @@ import 'dotenv/config';
 import path from 'path';
 import {MySequence} from './sequence';
 
+
+import {AuthenticationComponent} from '@loopback/authentication';
+import {
+  UserServiceBindings
+} from '@loopback/authentication-jwt';
+import {DbDataSource} from './datasources';
+import {JWTAuthenticationComponent} from './services/jwt-component';
+
+
+export class TodoListApplication extends BootMixin(
+  ServiceMixin(RepositoryMixin(RestApplication)),
+) {
+  constructor(options: ApplicationConfig = {}) {
+    super(options);
+    this.component(AuthenticationComponent);
+    this.component(JWTAuthenticationComponent);
+    this.dataSource(DbDataSource, UserServiceBindings.DATASOURCE_NAME);
+
+    // this.bind(TokenServiceBindings.TOKEN_SECRET).to(
+    //   TokenServiceConstants.TOKEN_SECRET_VALUE,
+    // );
+    // this.bind(TokenServiceBindings.TOKEN_EXPIRES_IN).to(
+    //   TokenServiceConstants.TOKEN_EXPIRES_IN_VALUE,
+    // );
+    // this.bind(TokenServiceBindings.TOKEN_SERVICE).toClass(JWTService);
+
+  }
+}
+
 export {ApplicationConfig};
 
 export class GettingStartedApplication extends BootMixin(

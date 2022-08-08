@@ -1,6 +1,7 @@
-import {Entity, hasMany, model, property} from '@loopback/repository';
+import {Entity, hasMany, hasOne, model, property} from '@loopback/repository';
 import {ProjectUser, ProjectUserWithRelations} from './project-user.model';
 import {Task, TaskWithRelations} from './task.model';
+import {UserCredentials} from './user-credentials.model';
 
 @model()
 export class User extends Entity {
@@ -31,13 +32,11 @@ export class User extends Entity {
 
   @property({
     type: 'number',
-    required: true,
   })
   age: number;
 
   @property({
     type: 'string',
-    required: true,
   })
   gender: string;
 
@@ -61,21 +60,24 @@ export class User extends Entity {
 
   @property({
     type: 'date',
-    required: true,
+    default: new Date()
   })
-  createdAt: string;
+  createdAt?: Date;
 
   @property({
     type: 'date',
-    required: true,
+    default: new Date()
   })
-  updatedAt: string;
+  updatedAt?: Date;
 
   @hasMany(() => Task)
   tasks: Task[];
 
   @hasMany(() => ProjectUser)
   projectUsers: ProjectUser[];
+
+  @hasOne(() => UserCredentials)
+  userCredentials: UserCredentials;
 
   constructor(data?: Partial<User>) {
     super(data);
