@@ -14,31 +14,11 @@ import {MySequence} from './sequence';
 
 import {AuthenticationComponent} from '@loopback/authentication';
 import {
+  SECURITY_SCHEME_SPEC,
   UserServiceBindings
 } from '@loopback/authentication-jwt';
-import {DbDataSource} from './datasources';
+import {MongodDBDataSource} from './datasources';
 import {JWTAuthenticationComponent} from './services/jwt-component';
-
-
-export class TodoListApplication extends BootMixin(
-  ServiceMixin(RepositoryMixin(RestApplication)),
-) {
-  constructor(options: ApplicationConfig = {}) {
-    super(options);
-    this.component(AuthenticationComponent);
-    this.component(JWTAuthenticationComponent);
-    this.dataSource(DbDataSource, UserServiceBindings.DATASOURCE_NAME);
-
-    // this.bind(TokenServiceBindings.TOKEN_SECRET).to(
-    //   TokenServiceConstants.TOKEN_SECRET_VALUE,
-    // );
-    // this.bind(TokenServiceBindings.TOKEN_EXPIRES_IN).to(
-    //   TokenServiceConstants.TOKEN_EXPIRES_IN_VALUE,
-    // );
-    // this.bind(TokenServiceBindings.TOKEN_SERVICE).toClass(JWTService);
-
-  }
-}
 
 export {ApplicationConfig};
 
@@ -50,6 +30,12 @@ export class GettingStartedApplication extends BootMixin(
 
     // Set up the custom sequence
     this.sequence(MySequence);
+
+
+    // Bind migration component related elements
+    this.component(AuthenticationComponent);
+    this.component(JWTAuthenticationComponent);
+    this.dataSource(MongodDBDataSource, UserServiceBindings.DATASOURCE_NAME);
 
     // Set up default home page
     this.static('/', path.join(__dirname, '../public'));
@@ -69,6 +55,30 @@ export class GettingStartedApplication extends BootMixin(
         extensions: ['.controller.js'],
         nested: true,
       },
-    };
+    }
+
+    // Object.entries(CronJobs).forEach(([_key, value]) => {
+    //   const cronJob = value;
+    //   this.add(cronJob);
+    // });
+
+    this.addSecuritySpec();
+
+    // import {CronComponent} from '@loopback/cron';
+    // this.component(CronComponent);
+  }
+
+  addSecuritySpec(): void {
+    this.api({
+      openapi: '3.0.0',
+      info: {
+        title: 'TODO API',
+        version: '1.0.0',
+      },
+      paths: {},
+      components: {securitySchemes: SECURITY_SCHEME_SPEC},
+      security: [{jwt: []}],
+      servers: [{url: '/'}],
+    });
   }
 }

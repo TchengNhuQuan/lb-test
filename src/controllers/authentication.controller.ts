@@ -1,4 +1,4 @@
-import {authenticate} from '@loopback/authentication';
+
 import {
   Credentials
 } from '@loopback/authentication-jwt';
@@ -17,8 +17,6 @@ import {UserRepository} from '../repositories';
 import {BcryptHasher, JWTService} from '../services';
 import {MyUserService} from '../services/user.service';
 import {validateCredentials} from '../services/validator.service';
-
-
 
 const CredentialsSchema: SchemaObject = {
   type: 'object',
@@ -75,7 +73,7 @@ export class AuthController {
       },
     },
   })
-  @authenticate('jwt')
+
   async login(
     @requestBody(CredentialsRequestBody) credentials: Credentials,
   ): Promise<{token: string}> {
@@ -84,7 +82,6 @@ export class AuthController {
     const token = await this.jwtService.generateToken(userProfile);
     return Promise.resolve({token: token})
   }
-
 
   @post('/signup', {
     responses: {
@@ -102,6 +99,7 @@ export class AuthController {
       },
     },
   })
+
   async signUp(
     @requestBody({
       content: {
@@ -118,13 +116,11 @@ export class AuthController {
     const hashedPassword = await this.hasher.hashPassword(userData.password)
     console.log('hashedPassword', hashedPassword);
     console.log(userData);
-
-
     const newUser = await this.userRepository.create({
       email: userData.email,
       username: userData.username,
       fullName: userData.fullName,
-      password: userData.password
+      password: hashedPassword
     })
     return newUser;
   }

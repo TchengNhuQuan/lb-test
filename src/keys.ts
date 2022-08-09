@@ -31,4 +31,5 @@ export namespace UserServiceBindings {
   export const USER_SERVICE = BindingKey.create<UserService<User, Credentials>>(
     'services.user.service',
   );
+  const DATASOURCE_NAME = "db";
 }
