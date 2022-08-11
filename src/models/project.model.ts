@@ -1,15 +1,15 @@
-import {Entity, model, property, hasMany} from '@loopback/repository';
-import {Task, TaskWithRelations} from './task.model';
+import {Entity, hasMany, model, property} from '@loopback/repository';
 import {ProjectUser, ProjectUserWithRelations} from './project-user.model';
+import {Task, TaskWithRelations} from './task.model';
 
 @model()
 export class Project extends Entity {
   @property({
-    type: 'number',
+    type: 'string',
     id: true,
     generated: true,
   })
-  id?: number;
+  id: string;
 
   @property({
     type: 'string',
@@ -42,16 +42,16 @@ export class Project extends Entity {
   createdAt: string;
 
   @property({
-    type: 'boolean',
+    type: 'date',
     required: true,
   })
-  updatedAt: boolean;
-
-  @hasMany(() => Task)
-  tasks: Task[];
+  updatedAt: string;
 
   @hasMany(() => ProjectUser)
   projectUsers: ProjectUser[];
+
+  @hasMany(() => Task)
+  tasks: Task[];
 
   constructor(data?: Partial<Project>) {
     super(data);

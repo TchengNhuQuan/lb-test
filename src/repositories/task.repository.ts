@@ -17,19 +17,23 @@ export class TaskRepository extends DefaultCrudRepository<
 
   public readonly project: BelongsToAccessor<Project, typeof Task.prototype.id>;
 
+  public readonly creator: BelongsToAccessor<User, typeof Task.prototype.id>;
+
   constructor(
     @inject('datasources.mongodb') dataSource: MongodDBDataSource, @repository.getter('TaskRepository') protected taskRepositoryGetter: Getter<TaskRepository>, @repository.getter('UserRepository') protected userRepositoryGetter: Getter<UserRepository>, @repository.getter('ProjectRepository') protected projectRepositoryGetter: Getter<ProjectRepository>,
   ) {
     super(Task, dataSource);
+    this.creator = this.createBelongsToAccessorFor('creator', userRepositoryGetter,);
+    this.registerInclusionResolver('creator', this.creator.inclusionResolver);
     this.project = this.createBelongsToAccessorFor('project', projectRepositoryGetter,);
     this.registerInclusionResolver('project', this.project.inclusionResolver);
     this.user = this.createBelongsToAccessorFor('user', userRepositoryGetter,);
     this.registerInclusionResolver('user', this.user.inclusionResolver);
-    this.link = this.createBelongsToAccessorFor(
-      'parent',
-      Getter.fromValue(this),
-    ); // for recursive relationship
-    // this.task = this.createBelongsToAccessorFor('task', taskRepositoryGetter,);
-    this.registerInclusionResolver('link', this.link.inclusionResolver);
+    // this.link = this.createBelongsToAccessorFor(
+    //   'parent',
+    //   Getter.fromValue(this),
+    // ); // for recursive relationship
+    // // this.task = this.createBelongsToAccessorFor('task', taskRepositoryGetter,);
+    // this.registerInclusionResolver('link', this.link.inclusionResolver);
   }
 }

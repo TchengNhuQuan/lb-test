@@ -37,7 +37,7 @@ export class MyUserService {
 
   convertToUserProfile(user: User): UserProfile {
     const userProfile: UserProfile = {
-      [securityId]:  user?.id?.toString() || '',
+      [securityId]:  user.id!,
       name: user.username,
       id: user.id,
       email: user.email,

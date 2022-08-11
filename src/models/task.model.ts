@@ -5,29 +5,11 @@ import {User, UserWithRelations} from './user.model';
 @model()
 export class Task extends Entity {
   @property({
-    type: 'number',
+    type: 'string',
     id: true,
     generated: true,
   })
-  id?: number;
-
-  @property({
-    type: 'string',
-    required: true,
-  })
-  createdBy: string;
-
-  @property({
-    type: 'string',
-    required: true,
-  })
-  assignedTo: string;
-
-  @property({
-    type: 'string',
-    required: true,
-  })
-  projectID: string;
+  id: string;
 
   @property({
     type: 'string',
@@ -46,6 +28,12 @@ export class Task extends Entity {
     required: true,
   })
   description: string;
+
+  @property({
+  type: 'boolean',
+  default: false,
+  })
+  isCreatedByAdmin: boolean;
 
   @property({
     type: 'boolean',
@@ -75,10 +63,13 @@ export class Task extends Entity {
   linkId: string;
 
   @belongsTo(() => User)
-  userId: number;
+  userId: string;
 
   @belongsTo(() => Project)
-  projectId: number;
+  projectId: string;
+
+  @belongsTo(() => User, {name: 'creator'})
+  createdBy: string;
 
   constructor(data?: Partial<Task>) {
     super(data);

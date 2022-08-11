@@ -1,16 +1,15 @@
 import {
-  repository,
+    repository
 } from '@loopback/repository';
 import {
-  param,
-  get,
-  getModelSchemaRef,
+    get,
+    getModelSchemaRef, param
 } from '@loopback/rest';
 import {
-  ProjectUser,
-  User,
+    ProjectUser,
+    User
 } from '../models';
-import {ProjectUserRepository} from '../repositories';
+import { ProjectUserRepository } from '../repositories';
 
 export class ProjectUserUserController {
   constructor(
@@ -31,7 +30,7 @@ export class ProjectUserUserController {
     },
   })
   async getUser(
-    @param.path.number('id') id: typeof ProjectUser.prototype.id,
+    @param.path.string('id') id: typeof ProjectUser.prototype.id,
   ): Promise<User> {
     return this.projectUserRepository.user(id);
   }

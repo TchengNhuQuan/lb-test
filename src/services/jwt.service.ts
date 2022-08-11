@@ -57,7 +57,7 @@ export class JWTService implements TokenService {
     let token: string;
     try {
       token = await signAsync(userProfile, this.jwtSecret, {
-        expiresIn: Number(this.expiresSecret),
+        expiresIn: 60,
       });
       return token;
     } catch (error) {

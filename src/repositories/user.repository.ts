@@ -21,9 +21,7 @@ export class UserRepository extends DefaultCrudRepository<
 
   public readonly projectUsers: HasManyRepositoryFactory<ProjectUser, typeof User.prototype.id>;
 
-  public readonly userCredentials: HasOneRepositoryFactory<
-  UserCredentials,
-  typeof User.prototype.id>;
+  public readonly userCredentials: HasOneRepositoryFactory<UserCredentials,typeof User.prototype.id>;
 
   constructor(
     @inject('datasources.mongodb') dataSource: MongodDBDataSource,

@@ -1,29 +1,31 @@
+import {authenticate} from '@loopback/authentication';
+import {inject} from '@loopback/core';
 import {
   Count,
   CountSchema,
   Filter,
   FilterExcludingWhere,
   repository,
-  Where,
+  Where
 } from '@loopback/repository';
 import {
-  post,
-  param,
-  get,
-  getModelSchemaRef,
-  patch,
-  put,
-  del,
-  requestBody,
-  response,
+  del, get,
+  getModelSchemaRef, HttpErrors, param, patch, post, put, requestBody,
+  response
 } from '@loopback/rest';
-import {Project} from '../models';
-import {ProjectRepository} from '../repositories';
+import {SecurityBindings, UserProfile} from '@loopback/security';
+import {Project, Task} from '../models';
+import {ProjectRepository, ProjectUserRepository, TaskRepository} from '../repositories';
 
+// @authenticate('jwt')
 export class ProjectController {
   constructor(
     @repository(ProjectRepository)
     public projectRepository : ProjectRepository,
+    @repository(ProjectUserRepository)
+    public projectUserRepository : ProjectUserRepository,
+    @repository(TaskRepository)
+    public taskRepository : TaskRepository
   ) {}
 
   @post('/projects')
@@ -76,6 +78,93 @@ export class ProjectController {
     return this.projectRepository.find(filter);
   }
 
+  @post('/projects/{id}/tasks')
+  @response(200, {
+    description: 'Task model instance',
+    content: {'application/json': {schema: getModelSchemaRef(Task)}},
+  })
+  async createTaskInProject(
+    @param.path.string('id') projectId: typeof Project.prototype.id,
+    @inject(SecurityBindings.USER)
+    currentUserProfile: UserProfile,
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: getModelSchemaRef(Task, {
+            title: 'NewTask',
+            exclude: ['id'],
+          }),
+        },
+      },
+    })
+    task: Omit<Task, 'id'>,
+  ): Promise<Task> {
+    const userId = currentUserProfile?.id;
+    const projectUser = await this.projectUserRepository.findOne({
+      where: {
+        userId,
+        projectId,
+      },
+    });
+    if (!projectUser) {
+      throw new HttpErrors.forbidden(
+        'You are not authorized to access this project',
+      );
+    }
+    const projectRole = projectUser.role;
+    return this.taskRepository.create({
+      ...task,
+      projectId,
+      isCreatedByAdmin: projectRole === 'admin',
+    });
+  }
+
+  @get('/projects/{id}/tasks')
+  @response(200, {
+    description: 'Array of Task model instances',
+    content: {
+      'application/json': {
+        schema: {
+          type: 'array',
+          items: getModelSchemaRef(Task),
+        },
+      },
+    },
+  })
+  async getTasksByProjectId(
+    @inject(SecurityBindings.USER)
+    currentUserProfile: UserProfile,
+    @param.path.string('id') projectId: string,
+  ): Promise<Task[]> {
+    const userId = currentUserProfile?.id;
+    const projectUser = await this.projectUserRepository.findOne({
+      where: {
+        userId,
+        projectId,
+      },
+    });
+    if (!projectUser) {
+      throw new HttpErrors.forbidden(
+        'You are not authorized to access this project',
+      );
+    }
+    const tasks: Task[] = await this.taskRepository.find({
+      where: {
+        projectId,
+      },
+      include: [
+        {
+          relation: 'creator',
+        },
+      ],
+    });
+    const projectRole = projectUser.role;
+    if (projectRole === 'admin') {
+      return tasks;
+    }
+    return tasks.filter(task => !task?.isCreatedByAdmin);
+  }
+
   @patch('/projects')
   @response(200, {
     description: 'Project PATCH success count',
@@ -105,7 +194,7 @@ export class ProjectController {
     },
   })
   async findById(
-    @param.path.number('id') id: number,
+    @param.path.string('id') id: string,
     @param.filter(Project, {exclude: 'where'}) filter?: FilterExcludingWhere<Project>
   ): Promise<Project> {
     return this.projectRepository.findById(id, filter);
@@ -116,7 +205,7 @@ export class ProjectController {
     description: 'Project PATCH success',
   })
   async updateById(
-    @param.path.number('id') id: number,
+    @param.path.string('id') id: string,
     @requestBody({
       content: {
         'application/json': {
@@ -134,7 +223,7 @@ export class ProjectController {
     description: 'Project PUT success',
   })
   async replaceById(
-    @param.path.number('id') id: number,
+    @param.path.string('id') id: string,
     @requestBody() project: Project,
   ): Promise<void> {
     await this.projectRepository.replaceById(id, project);
@@ -144,7 +233,7 @@ export class ProjectController {
   @response(204, {
     description: 'Project DELETE success',
   })
-  async deleteById(@param.path.number('id') id: number): Promise<void> {
+  async deleteById(@param.path.string('id') id: string): Promise<void> {
     await this.projectRepository.deleteById(id);
   }
 }

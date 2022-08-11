@@ -1,16 +1,15 @@
 import {
-  repository,
+    repository
 } from '@loopback/repository';
 import {
-  param,
-  get,
-  getModelSchemaRef,
+    get,
+    getModelSchemaRef, param
 } from '@loopback/rest';
 import {
-  Task,
-  User,
+    Task,
+    User
 } from '../models';
-import {TaskRepository} from '../repositories';
+import { TaskRepository } from '../repositories';
 
 export class TaskUserController {
   constructor(
@@ -31,7 +30,7 @@ export class TaskUserController {
     },
   })
   async getUser(
-    @param.path.number('id') id: typeof Task.prototype.id,
+    @param.path.string('id') id: typeof Task.prototype.id,
   ): Promise<User> {
     return this.taskRepository.user(id);
   }

@@ -14,7 +14,7 @@ export class JWTAuthenticationComponent implements Component {
     Binding.bind(PasswordHasherBindings.ROUNDS).to(10),
     Binding.bind(TokenServiceBindings.TOKEN_SERVICE).toClass(JWTService),
     Binding.bind(TokenServiceBindings.TOKEN_SECRET).to(
-      process.env.JWT_SECRET_VALUE ?? 'vuhoangphuc',
+      process.env.JWT_SECRET_VALUE ?? 'todo123@@',
     ),
     Binding.bind(TokenServiceBindings.TOKEN_EXPIRES_IN).to(
       process.env.JWT_EXPIRES_IN_VALUE ?? '24h',

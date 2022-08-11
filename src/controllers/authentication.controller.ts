@@ -1,4 +1,3 @@
-
 import {
   Credentials
 } from '@loopback/authentication-jwt';

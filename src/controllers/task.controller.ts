@@ -1,4 +1,4 @@
-import {authenticate} from '@loopback/authentication';
+import {inject} from '@loopback/core';
 import {
   Count,
   CountSchema,
@@ -12,9 +12,10 @@ import {
   getModelSchemaRef, param, patch, post, put, requestBody,
   response
 } from '@loopback/rest';
+import {SecurityBindings, securityId, UserProfile} from '@loopback/security';
 import {Task} from '../models';
 import {TaskRepository} from '../repositories';
-@authenticate('jwt')
+
 
 export class TaskController {
   constructor(
@@ -28,6 +29,8 @@ export class TaskController {
     content: {'application/json': {schema: getModelSchemaRef(Task)}},
   })
   async create(
+    @inject(SecurityBindings.USER, {optional: true})
+    currentUserProfile: UserProfile,
     @requestBody({
       content: {
         'application/json': {
@@ -40,7 +43,10 @@ export class TaskController {
     })
     task: Omit<Task, 'id'>,
   ): Promise<Task> {
-    return this.taskRepository.create(task);
+    return this.taskRepository.create({
+      ...task,
+      createdBy: currentUserProfile[securityId],
+    });
   }
 
   @get('/tasks/count')
@@ -52,6 +58,18 @@ export class TaskController {
     @param.where(Task) where?: Where<Task>,
   ): Promise<Count> {
     return this.taskRepository.count(where);
+  }
+
+  @post('/tasks/link/{id}/{id2}')
+  @response(200, {
+    description: 'Task model instance',
+    content: {'application/json': {schema: getModelSchemaRef(Task)}},
+  })
+  async linkTaskWithTask(
+    @param.path.string('id') id: string,
+    @param.path.string('id2') id2:string,
+  ): Promise<void> {
+    return this.taskRepository.updateById(id, {linkedTaskId: id2});
   }
 
   @get('/tasks')
@@ -101,7 +119,7 @@ export class TaskController {
     },
   })
   async findById(
-    @param.path.number('id') id: number,
+    @param.path.string('id') id: string,
     @param.filter(Task, {exclude: 'where'}) filter?: FilterExcludingWhere<Task>
   ): Promise<Task> {
     return this.taskRepository.findById(id, filter);
@@ -112,7 +130,7 @@ export class TaskController {
     description: 'Task PATCH success',
   })
   async updateById(
-    @param.path.number('id') id: number,
+    @param.path.string('id') id: string,
     @requestBody({
       content: {
         'application/json': {
@@ -130,7 +148,7 @@ export class TaskController {
     description: 'Task PUT success',
   })
   async replaceById(
-    @param.path.number('id') id: number,
+    @param.path.string('id') id: string,
     @requestBody() task: Task,
   ): Promise<void> {
     await this.taskRepository.replaceById(id, task);
@@ -140,7 +158,7 @@ export class TaskController {
   @response(204, {
     description: 'Task DELETE success',
   })
-  async deleteById(@param.path.number('id') id: number): Promise<void> {
+  async deleteById(@param.path.string('id') id: string): Promise<void> {
     await this.taskRepository.deleteById(id);
   }
 }
