@@ -10,7 +10,6 @@ export class ProjectUserRepository extends DefaultCrudRepository<
   typeof ProjectUser.prototype.id,
   ProjectUserRelations
 > {
-
   public readonly user: BelongsToAccessor<User, typeof ProjectUser.prototype.id>;
 
   public readonly project: BelongsToAccessor<Project, typeof ProjectUser.prototype.id>;

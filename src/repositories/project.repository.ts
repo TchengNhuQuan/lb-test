@@ -10,7 +10,6 @@ export class ProjectRepository extends DefaultCrudRepository<
   typeof Project.prototype.id,
   ProjectRelations
 > {
-
   public readonly task: HasManyRepositoryFactory<Task, typeof Project.prototype.id>;
 
   public readonly projectUsers: HasManyRepositoryFactory<ProjectUser, typeof Project.prototype.id>;

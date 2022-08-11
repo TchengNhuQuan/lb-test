@@ -1,23 +1,12 @@
 import {authenticate} from '@loopback/authentication';
 import {inject} from '@loopback/core';
-import {
-  Count,
-  CountSchema,
-  Filter,
-  FilterExcludingWhere,
-  repository,
-  Where
-} from '@loopback/repository';
-import {
-  del, get,
-  getModelSchemaRef, HttpErrors, param, patch, post, put, requestBody,
-  response
-} from '@loopback/rest';
+import {Count, CountSchema, Filter, FilterExcludingWhere, repository, Where} from '@loopback/repository';
+import {del, get, getModelSchemaRef, HttpErrors, param, patch, post, put, requestBody, response} from '@loopback/rest';
 import {SecurityBindings, UserProfile} from '@loopback/security';
 import {Project, Task} from '../models';
 import {ProjectRepository, ProjectUserRepository, TaskRepository} from '../repositories';
 
-// @authenticate('jwt')
+@authenticate('jwt')
 export class ProjectController {
   constructor(
     @repository(ProjectRepository)
@@ -107,7 +96,7 @@ export class ProjectController {
       },
     });
     if (!projectUser) {
-      throw new HttpErrors.forbidden(
+      throw new HttpErrors.Unauthorized(
         'You are not authorized to access this project',
       );
     }
@@ -144,7 +133,7 @@ export class ProjectController {
       },
     });
     if (!projectUser) {
-      throw new HttpErrors.forbidden(
+      throw new HttpErrors.Unauthorized(
         'You are not authorized to access this project',
       );
     }

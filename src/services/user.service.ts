@@ -21,16 +21,16 @@ export class MyUserService {
 
   async  verifyCredentials(credentials: Credentials): Promise<User> {
     const foundUser = await this.userRepository.findOne({
-        where: {
-            email: credentials.email
-        }
+      where: {
+        email: credentials.email
+      }
     })
     if (!foundUser) {
-        throw new HttpErrors.NotFound('user not found');
+      throw new HttpErrors.NotFound('user not found');
     }
     const passwordMatched = await this.hasher.comparePassword(credentials.password, foundUser.password)
     if (!passwordMatched) {
-        throw new HttpErrors.Unauthorized('password is not valid');
+      throw new HttpErrors.Unauthorized('password is not valid');
     }
     return foundUser;
   }
@@ -42,7 +42,6 @@ export class MyUserService {
       id: user.id,
       email: user.email,
       };
-
     return userProfile;
   }
 }

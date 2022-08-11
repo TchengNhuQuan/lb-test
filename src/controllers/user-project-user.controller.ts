@@ -1,24 +1,7 @@
-import {
-    Count,
-    CountSchema,
-    Filter,
-    repository,
-    Where
-} from '@loopback/repository';
-import {
-    del,
-    get,
-    getModelSchemaRef,
-    getWhereSchemaFor,
-    param,
-    patch,
-    post,
-    requestBody
-} from '@loopback/rest';
-import {
-    ProjectUser, User
-} from '../models';
-import { UserRepository } from '../repositories';
+import {Count, CountSchema, Filter, repository, Where} from '@loopback/repository';
+import {del, get, getModelSchemaRef, getWhereSchemaFor, param, patch, post, requestBody} from '@loopback/rest';
+import {ProjectUser, User} from '../models';
+import {UserRepository} from '../repositories';
 
 export class UserProjectUserController {
   constructor(

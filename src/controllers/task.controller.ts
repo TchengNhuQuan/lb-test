@@ -1,22 +1,12 @@
+import {authenticate} from '@loopback/authentication';
 import {inject} from '@loopback/core';
-import {
-  Count,
-  CountSchema,
-  Filter,
-  FilterExcludingWhere,
-  repository,
-  Where
-} from '@loopback/repository';
-import {
-  del, get,
-  getModelSchemaRef, param, patch, post, put, requestBody,
-  response
-} from '@loopback/rest';
+import {Count, CountSchema, Filter, FilterExcludingWhere, repository, Where} from '@loopback/repository';
+import {del, get, getModelSchemaRef, HttpErrors, param, patch, post, put, requestBody, response} from '@loopback/rest';
 import {SecurityBindings, UserProfile} from '@loopback/security';
 import {Task} from '../models';
 import {TaskRepository} from '../repositories';
 
-
+@authenticate('jwt')
 export class TaskController {
   constructor(
     @repository(TaskRepository)
@@ -69,7 +59,13 @@ export class TaskController {
     @param.path.string('id') id: string,
     @param.path.string('id2') id2:string,
   ): Promise<void> {
-    return this.taskRepository.updateById(id, {linkedTaskId: id2});
+    const currentProject:Task = await this.taskRepository.findById(id);
+    const linkProject:Task = await this.taskRepository.findById(id2);
+    if (String(currentProject.projectId) == String(linkProject.projectId)) {
+      return this.taskRepository.updateById(id, {linkId: id2});
+    } else {
+      throw new HttpErrors.Unauthorized("Unable to link task because they not in the same project");
+    }
   }
 
   @get('/tasks')

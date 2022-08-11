@@ -1,23 +1,17 @@
+import {AuthenticationComponent} from '@loopback/authentication';
+import {SECURITY_SCHEME_SPEC, UserServiceBindings} from '@loopback/authentication-jwt';
 import {BootMixin} from '@loopback/boot';
 import {ApplicationConfig} from '@loopback/core';
+import {CronComponent} from '@loopback/cron';
 import {RepositoryMixin} from '@loopback/repository';
 import {RestApplication} from '@loopback/rest';
-import {
-  RestExplorerBindings,
-  RestExplorerComponent
-} from '@loopback/rest-explorer';
+import {RestExplorerBindings, RestExplorerComponent} from '@loopback/rest-explorer';
 import {ServiceMixin} from '@loopback/service-proxy';
 import 'dotenv/config';
 import path from 'path';
-import {MySequence} from './sequence';
-
-
-import {AuthenticationComponent} from '@loopback/authentication';
-import {
-  SECURITY_SCHEME_SPEC,
-  UserServiceBindings
-} from '@loopback/authentication-jwt';
+import * as CronJobs from './cronjobs';
 import {MongodDBDataSource} from './datasources';
+import {MySequence} from './sequence';
 import {JWTAuthenticationComponent} from './services/jwt-component';
 
 export {ApplicationConfig};
@@ -27,25 +21,19 @@ export class GettingStartedApplication extends BootMixin(
 ) {
   constructor(options: ApplicationConfig = {}) {
     super(options);
-
     // Set up the custom sequence
     this.sequence(MySequence);
-
-
     // Bind migration component related elements
     this.component(AuthenticationComponent);
     this.component(JWTAuthenticationComponent);
     this.dataSource(MongodDBDataSource, UserServiceBindings.DATASOURCE_NAME);
-
     // Set up default home page
     this.static('/', path.join(__dirname, '../public'));
-
     // Customize @loopback/rest-explorer configuration here
     this.configure(RestExplorerBindings.COMPONENT).to({
       path: '/explorer',
     });
     this.component(RestExplorerComponent);
-
     this.projectRoot = __dirname;
     // Customize @loopback/boot Booter Conventions here
     this.bootOptions = {
@@ -57,15 +45,12 @@ export class GettingStartedApplication extends BootMixin(
       },
     }
 
-    // Object.entries(CronJobs).forEach(([_key, value]) => {
-    //   const cronJob = value;
-    //   this.add(cronJob);
-    // });
-
+    Object.entries(CronJobs).forEach(([_key, value]) => {
+      const cronJob = value;
+      this.add(cronJob);
+    });
     this.addSecuritySpec();
-
-    // import {CronComponent} from '@loopback/cron';
-    // this.component(CronComponent);
+    this.component(CronComponent);
   }
 
   addSecuritySpec(): void {

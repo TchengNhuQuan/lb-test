@@ -1,7 +1,7 @@
 import {Getter, inject} from '@loopback/core';
-import {DefaultCrudRepository, HasManyRepositoryFactory, repository, HasOneRepositoryFactory} from '@loopback/repository';
+import {DefaultCrudRepository, HasManyRepositoryFactory, HasOneRepositoryFactory, repository} from '@loopback/repository';
 import {MongodDBDataSource} from '../datasources';
-import {ProjectUser, Task, User, UserRelations, UserCredentials} from '../models';
+import {ProjectUser, Task, User, UserCredentials, UserRelations} from '../models';
 import {ProjectUserRepository} from './project-user.repository';
 import {TaskRepository} from './task.repository';
 import {UserCredentialsRepository} from './user-credentials.repository';
@@ -16,7 +16,6 @@ export class UserRepository extends DefaultCrudRepository<
   typeof User.prototype.id,
   UserRelations
 > {
-
   public readonly tasks: HasManyRepositoryFactory<Task, typeof User.prototype.id>;
 
   public readonly projectUsers: HasManyRepositoryFactory<ProjectUser, typeof User.prototype.id>;

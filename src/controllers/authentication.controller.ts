@@ -1,13 +1,7 @@
-import {
-  Credentials
-} from '@loopback/authentication-jwt';
+import {Credentials} from '@loopback/authentication-jwt';
 import {inject} from '@loopback/core';
 import {repository} from '@loopback/repository';
-import {
-  getModelSchemaRef, post,
-  requestBody,
-  SchemaObject
-} from '@loopback/rest';
+import {getModelSchemaRef, post, requestBody, SchemaObject} from '@loopback/rest';
 import {SecurityBindings, UserProfile} from '@loopback/security';
 import _ from 'lodash';
 import {PasswordHasherBindings, TokenServiceBindings, UserServiceBindings} from '../keys';
@@ -53,7 +47,7 @@ export class AuthController {
     public hasher: BcryptHasher
   ) {}
 
-  @post('/users/login', {
+  @post('/auth/login', {
     responses: {
       '200': {
         description: 'Token',
@@ -82,7 +76,7 @@ export class AuthController {
     return Promise.resolve({token: token})
   }
 
-  @post('/signup', {
+  @post('/auth/signup', {
     responses: {
       '200': {
         description: 'User',

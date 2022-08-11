@@ -10,7 +10,6 @@ export class TaskRepository extends DefaultCrudRepository<
   typeof Task.prototype.id,
   TaskRelations
 > {
-
   public readonly link: BelongsToAccessor<Task, typeof Task.prototype.id>;
 
   public readonly user: BelongsToAccessor<User, typeof Task.prototype.id>;

@@ -23,7 +23,7 @@ class CleanTask extends CronJob {
       timeZone: 'Asia/Ho_Chi_Minh',
       start: true,
       // Turn on for testing
-      runOnInit: false,
+      runOnInit: true,
     });
   }
 }

@@ -9,6 +9,7 @@ import {JWTService} from './jwt.service';
 
 export class JWTStrategy implements AuthenticationStrategy {
   name: string = 'jwt';
+
   @inject(TokenServiceBindings.TOKEN_SERVICE)
   public jwtService: JWTService;
 

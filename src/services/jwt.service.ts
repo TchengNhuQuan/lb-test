@@ -15,8 +15,8 @@ export class JWTService implements TokenService {
     public readonly jwtSecret: string,
     @inject(TokenServiceBindings.TOKEN_EXPIRES_IN)
     public readonly expiresSecret: string,
-
   ) {}
+
   async verifyToken(token: string): Promise<UserProfile> {
     if (!token) {
       throw new HttpErrors.Unauthorized(
@@ -57,7 +57,7 @@ export class JWTService implements TokenService {
     let token: string;
     try {
       token = await signAsync(userProfile, this.jwtSecret, {
-        expiresIn: 60,
+        expiresIn: 600,
       });
       return token;
     } catch (error) {

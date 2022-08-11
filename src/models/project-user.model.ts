@@ -1,4 +1,5 @@
 import {belongsTo, Entity, model, property} from '@loopback/repository';
+import {EProjectUserRole} from '../enums/project-user';
 import {Project, ProjectWithRelations} from './project.model';
 import {User, UserWithRelations} from './user.model';
 
@@ -13,9 +14,11 @@ export class ProjectUser extends Entity {
 
   @property({
     type: 'string',
-    required: true,
+    jsonSchema: {
+      enum: Object.values(EProjectUserRole)
+    },
   })
-  role: string;
+  role: EProjectUserRole;
 
   @property({
     type: 'date',

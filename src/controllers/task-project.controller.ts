@@ -1,14 +1,7 @@
-import {
-    repository
-} from '@loopback/repository';
-import {
-    get,
-    getModelSchemaRef, param
-} from '@loopback/rest';
-import {
-    Project, Task
-} from '../models';
-import { TaskRepository } from '../repositories';
+import {repository} from '@loopback/repository';
+import {get, getModelSchemaRef, param} from '@loopback/rest';
+import {Project, Task} from '../models';
+import {TaskRepository} from '../repositories';
 
 export class TaskProjectController {
   constructor(

@@ -1,4 +1,5 @@
 import {belongsTo, Entity, model, property} from '@loopback/repository';
+import {ETaskStatus} from '../enums/task';
 import {Project, ProjectWithRelations} from './project.model';
 import {User, UserWithRelations} from './user.model';
 
@@ -10,12 +11,6 @@ export class Task extends Entity {
     generated: true,
   })
   id: string;
-
-  @property({
-    type: 'string',
-    required: true,
-  })
-  linkedTaskId: string;
 
   @property({
     type: 'string',
@@ -43,9 +38,11 @@ export class Task extends Entity {
 
   @property({
     type: 'string',
-    required: true,
+    jsonSchema: {
+      enum: Object.values(ETaskStatus)
+    },
   })
-  status: string;
+  status: ETaskStatus;
 
   @property({
     type: 'date',
