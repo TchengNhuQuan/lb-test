@@ -12,7 +12,7 @@ import {
   getModelSchemaRef, param, patch, post, put, requestBody,
   response
 } from '@loopback/rest';
-import {SecurityBindings, securityId, UserProfile} from '@loopback/security';
+import {SecurityBindings, UserProfile} from '@loopback/security';
 import {Task} from '../models';
 import {TaskRepository} from '../repositories';
 
@@ -45,7 +45,7 @@ export class TaskController {
   ): Promise<Task> {
     return this.taskRepository.create({
       ...task,
-      createdBy: currentUserProfile[securityId],
+      createdBy: currentUserProfile.id,
     });
   }
 
