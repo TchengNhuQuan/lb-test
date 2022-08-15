@@ -105,16 +105,19 @@ export class AuthController {
     })
     userData: Omit<User, 'id'>,
   ) {
-    validateCredentials(_.pick(userData, ['email', 'password']), this.userRepository);
+    await validateCredentials(
+      _.pick(userData, ['email', 'password']),
+      this.userRepository
+    );
     const hashedPassword = await this.hasher.hashPassword(userData.password)
-    console.log('hashedPassword', hashedPassword);
-    console.log(userData);
     const newUser = await this.userRepository.create({
       email: userData.email,
       username: userData.username,
       fullName: userData.fullName,
-      password: hashedPassword
-    })
+    });
+    await this.userRepository.userCredentials(newUser?.id).create({
+      password: hashedPassword,
+    });
     return newUser;
   }
 }

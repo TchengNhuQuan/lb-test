@@ -3,6 +3,7 @@ import {createBindingFromClass} from '@loopback/core';
 import {CronJob, cronJob} from '@loopback/cron';
 import {repository} from '@loopback/repository';
 import isEmpty from 'lodash/isEmpty';
+import {ETaskStatus} from '../enums/task';
 import {Task} from '../models/task.model';
 import {TaskRepository} from '../repositories';
 
@@ -41,7 +42,7 @@ async function cleanDeletedTasks(taskRepository: TaskRepository) {
     while (!isEmpty(tasks) || page === 0) {
       tasks = await taskRepository.find({
         where: {
-          status: 'done',
+          status: ETaskStatus.DONE,
         },
         skip: page * pageSize,
         limit: pageSize,

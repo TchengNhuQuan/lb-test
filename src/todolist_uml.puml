@@ -9,7 +9,6 @@ skinparam linetype ortho
         -id: ObjectID <<generated>>
         --
         username: string
-        password: string
         fullName: string
         age: number
         gender: string
@@ -21,12 +20,20 @@ skinparam linetype ortho
         updatedAt?: Date
     }
 
+    entity "UserCredentials" as userCredentials {
+        -id: ObjectID <<generated>>
+        --
+        ~userId: ObjectID
+        --
+        password: string
+    }
+
     entity "Project" as project {
         -id: ObjectID <<generated>>
         --
         projectName: string
         description: string
-        status: string <<ongoing | not start yet | done>>
+        status: StatusEnum <<todo | inprogress| done>>
         isDeleted: boolean
         createdAt?: Date
         updatedAt?: Date
@@ -43,7 +50,7 @@ skinparam linetype ortho
         taskName: string
         description: string
         isDeleted: boolean
-        status: string <<ongoing | not start yet | done>>
+        status: StatusEnum <<todo | inprogress| done>>
         createdAt?: Date
         updatedAt?: Date
 
@@ -55,6 +62,7 @@ skinparam linetype ortho
         ~projectId: ObjectID
         ~userId: ObjectID
         --
+        isDeleted: boolean
         createdAt?: Date
         updatedAt?: Date
         role: RoleEnum <<admin | user>>
@@ -66,6 +74,7 @@ skinparam linetype ortho
 
     user ||--o{ projectUser
     user ||--o{ task
+    user ||--|| userCredentials
 
     project ||--|{ projectUser
     project ||--|{ task

@@ -28,11 +28,7 @@ export class TaskRepository extends DefaultCrudRepository<
     this.registerInclusionResolver('project', this.project.inclusionResolver);
     this.user = this.createBelongsToAccessorFor('user', userRepositoryGetter,);
     this.registerInclusionResolver('user', this.user.inclusionResolver);
-    // this.link = this.createBelongsToAccessorFor(
-    //   'parent',
-    //   Getter.fromValue(this),
-    // ); // for recursive relationship
-    // // this.task = this.createBelongsToAccessorFor('task', taskRepositoryGetter,);
-    // this.registerInclusionResolver('link', this.link.inclusionResolver);
+    this.link = this.createBelongsToAccessorFor('link', Getter.fromValue(this));
+    this.registerInclusionResolver('link', this.link.inclusionResolver);
   }
 }

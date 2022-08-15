@@ -23,12 +23,16 @@ export class MyUserService {
     const foundUser = await this.userRepository.findOne({
       where: {
         email: credentials.email
-      }
-    })
+      },
+      include: ['userCredentials'],
+    });
     if (!foundUser) {
       throw new HttpErrors.NotFound('user not found');
     }
-    const passwordMatched = await this.hasher.comparePassword(credentials.password, foundUser.password)
+    const passwordMatched = await this.hasher.comparePassword(
+      credentials.password,
+      foundUser?.userCredentials?.password
+    );
     if (!passwordMatched) {
       throw new HttpErrors.Unauthorized('password is not valid');
     }
