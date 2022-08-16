@@ -1,18 +1,20 @@
-// Copyright IBM Corp. 2019,2020. All Rights Reserved.
-// Node module: loopback4-example-shopping
-// This file is licensed under the MIT License.
-// License text available at https://opensource.org/licenses/MIT
-
-import {Entity, model, property} from '@loopback/repository';
+import {belongsTo, Entity, model, property} from '@loopback/repository';
+import {User} from './user.model';
 
 @model()
 export class UserCredentials extends Entity {
   @property({
     type: 'string',
     id: true,
-    mongodb: {dataType: 'ObjectID'},
+    generated: true,
   })
-  id: string;
+  id?: string;
+
+  @property({
+    type: 'string',
+    required: true,
+  })
+  email: string;
 
   @property({
     type: 'string',
@@ -21,10 +23,18 @@ export class UserCredentials extends Entity {
   password: string;
 
   @property({
-    type: 'string',
-    required: true,
-    mongodb: {dataType: 'ObjectID'},
+    type: 'date',
+    default: new Date()
   })
+  createdAt?: Date;
+
+  @property({
+    type: 'date',
+    default: new Date()
+  })
+  updatedAt?: Date;
+
+  @belongsTo(() => User)
   userId: string;
 
   constructor(data?: Partial<UserCredentials>) {
@@ -36,5 +46,4 @@ export interface UserCredentialsRelations {
   // describe navigational properties here
 }
 
-export type UserCredentialsWithRelations = UserCredentials &
-  UserCredentialsRelations;
+export type UserCredentialsWithRelations = UserCredentials & UserCredentialsRelations;

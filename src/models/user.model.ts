@@ -14,19 +14,11 @@ export class User extends Entity {
 
   @property({
     type: 'string',
-    required: true,
   })
   username: string;
 
   @property({
     type: 'string',
-    required: true,
-  })
-  password: string;
-
-  @property({
-    type: 'string',
-    required: true,
   })
   fullName: string;
 
