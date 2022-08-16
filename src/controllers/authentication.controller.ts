@@ -5,7 +5,8 @@ import {getModelSchemaRef, post, requestBody, SchemaObject} from '@loopback/rest
 import {SecurityBindings, UserProfile} from '@loopback/security';
 import _ from 'lodash';
 import {PasswordHasherBindings, TokenServiceBindings, UserServiceBindings} from '../keys';
-import {User, UserCredentials} from '../models';
+import {User} from '../models';
+import {UserWithPassword} from '../models/user-with-password.model';
 import {UserRepository} from '../repositories';
 import {BcryptHasher, JWTService} from '../services';
 import {MyUserService} from '../services/user.service';
@@ -97,13 +98,13 @@ export class AuthController {
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(UserCredentials, {
-            exclude: ['id', 'createdAt', 'updatedAt', 'userId'],
+          schema: getModelSchemaRef(UserWithPassword, {
+            exclude: ['id', 'createdAt', 'updatedAt'],
           }),
         },
       },
     })
-    userData: Omit<UserCredentials, 'id'>,
+    userData: Omit<UserWithPassword, 'id'>,
   ) {
     await validateCredentials(
       _.pick(userData, ['email', 'password']),
@@ -114,7 +115,6 @@ export class AuthController {
       email: userData.email,
     });
     await this.userRepository.userCredentials(newUser?.id).create({
-      email: userData.email,
       password: hashedPassword,
     });
     return newUser;

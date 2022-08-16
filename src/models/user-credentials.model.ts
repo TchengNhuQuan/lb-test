@@ -1,5 +1,5 @@
 import {belongsTo, Entity, model, property} from '@loopback/repository';
-import {User} from './user.model';
+import {User, UserWithRelations} from './user.model';
 
 @model()
 export class UserCredentials extends Entity {
@@ -14,25 +14,7 @@ export class UserCredentials extends Entity {
     type: 'string',
     required: true,
   })
-  email: string;
-
-  @property({
-    type: 'string',
-    required: true,
-  })
   password: string;
-
-  @property({
-    type: 'date',
-    default: new Date()
-  })
-  createdAt?: Date;
-
-  @property({
-    type: 'date',
-    default: new Date()
-  })
-  updatedAt?: Date;
 
   @belongsTo(() => User)
   userId: string;
@@ -43,6 +25,7 @@ export class UserCredentials extends Entity {
 }
 
 export interface UserCredentialsRelations {
+  user: UserWithRelations
   // describe navigational properties here
 }
 

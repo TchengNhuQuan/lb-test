@@ -24,7 +24,7 @@ export class MyUserService {
       where: {
         email: credentials.email
       },
-      include: ['userCredentials'],
+      include: [{relation: "userCredentials"}],
     });
     if (!foundUser) {
       throw new HttpErrors.NotFound('user not found');

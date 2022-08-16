@@ -20,7 +20,7 @@ export class UserRepository extends DefaultCrudRepository<
 
   public readonly projectUsers: HasManyRepositoryFactory<ProjectUser, typeof User.prototype.id>;
 
-  public readonly userCredentials: HasOneRepositoryFactory<UserCredentials,typeof User.prototype.id>;
+  public readonly userCredentials: HasOneRepositoryFactory<UserCredentials, typeof User.prototype.id>;
 
   constructor(
     @inject('datasources.mongodb') dataSource: MongodDBDataSource,
@@ -28,18 +28,15 @@ export class UserRepository extends DefaultCrudRepository<
     protected taskRepositoryGetter: Getter<TaskRepository>,
     @repository.getter('ProjectUserRepository')
     protected projectUserRepositoryGetter: Getter<ProjectUserRepository>,
-    @repository.getter('UserCredentialsRepository')
-    protected userCredentialsRepositoryGetter: Getter<UserCredentialsRepository>,
+    @repository.getter('UserCredentialsRepository') protected userCredentialsRepositoryGetter: Getter<UserCredentialsRepository>,
   ) {
     super(User, dataSource);
     this.projectUsers = this.createHasManyRepositoryFactoryFor('projectUsers', projectUserRepositoryGetter,);
     this.registerInclusionResolver('projectUsers', this.projectUsers.inclusionResolver);
     this.tasks = this.createHasManyRepositoryFactoryFor('tasks', taskRepositoryGetter,);
     this.registerInclusionResolver('tasks', this.tasks.inclusionResolver);
-    this.userCredentials = this.createHasOneRepositoryFactoryFor(
-      'userCredentials',
-      userCredentialsRepositoryGetter,
-    );
+    this.userCredentials = this.createHasOneRepositoryFactoryFor('userCredentials', userCredentialsRepositoryGetter);
+    this.registerInclusionResolver('userCredentials', this.userCredentials.inclusionResolver);
   }
 
   async findCredentials(

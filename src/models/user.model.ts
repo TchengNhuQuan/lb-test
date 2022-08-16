@@ -1,7 +1,7 @@
-import {Entity, hasMany, hasOne, model, property} from '@loopback/repository';
+import {Entity, hasMany, model, property, hasOne} from '@loopback/repository';
 import {ProjectUser, ProjectUserWithRelations} from './project-user.model';
 import {Task, TaskWithRelations} from './task.model';
-import {UserCredentials} from './user-credentials.model';
+import {UserCredentialsWithRelations, UserCredentials} from './user-credentials.model';
 
 @model()
 export class User extends Entity {
@@ -80,6 +80,7 @@ export interface UserRelations {
   // describe navigational properties here
   tasks?: TaskWithRelations[]
   projectUsers?: ProjectUserWithRelations[]
+  userCredentials?: UserCredentialsWithRelations
 }
 
 export type UserWithRelations = User & UserRelations;
